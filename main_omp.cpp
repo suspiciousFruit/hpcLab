@@ -48,21 +48,25 @@
 //     return 0;
 // }
 
+#define DYNAMIC
 
-int main() {
-    MutexSet points_set;
+int main(int argc, const char* argv[]) {
+    MutexSet points_set; // Синхронное множество (множество с мьютексом)
     const auto ts = read<triangle_t>("triangles.txt");
 	const auto cs = read<circle_t>("circles.txt");
     const size_t nts = ts.size();
     const size_t ncs = cs.size();
 
+    if (argc > 1) // Устанавливаем количество потоков
+        omp_set_num_threads(atoi(argv[1]));
+
     const double startTime = omp_get_wtime();
     
     #pragma omp parallel for
     for (size_t i = 0; i < ncs; ++i) {
-        #ifdef DYNAMIC
+        #ifdef DYNAMIC // Использование динамического массива для точек (в каждом потоке)
         PointsArray points;
-        #else
+        #else // Использование массивов фиксированного размера для точек (в каждом потоке)
         FixedPointsArray points;
         #endif        
         for (size_t j = 0; j < nts; ++j) {
