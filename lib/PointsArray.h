@@ -1,13 +1,21 @@
 #pragma once
+#include <iostream>
+#include <omp.h>
 #include <vector>
 #include "shapes.h"
 
-
+class MutexPointsArray;
 
 class PointsArray {
 private:
     std::vector<point_t> points_;
 public:
+    PointsArray() { }
+    PointsArray(size_t size) : points_(size) { }
+
+    PointsArray(std::vector<point_t>&& vec)
+    : points_(std::move(vec)) { }
+
     void push(const point_t& p) {
         points_.push_back(p);
     }
@@ -39,5 +47,40 @@ public:
 
     size_t size() const {
         return points_.size();
+    }
+
+    const point_t* data() const {
+        return points_.data();
+    }
+};
+
+class MutexPointsArray {
+private:
+    PointsArray points_;
+    omp_lock_t lock_;
+public:
+    MutexPointsArray() {
+        omp_init_lock(&lock_);
+    }
+
+    void pushUnique(const point_t& p) {
+        omp_set_lock(&lock_);
+        points_.pushUnique(p);
+        omp_unset_lock(&lock_);
+    }
+
+    template <typename ArrType>
+    void push(const ArrType& points) {
+        omp_set_lock(&lock_);
+        points_.push(points);
+        omp_unset_lock(&lock_);
+    }
+
+    PointsArray&& getPointsArray() {
+        return std::move(points_);
+    }
+
+    ~MutexPointsArray() {
+        omp_destroy_lock(&lock_);    
     }
 };
