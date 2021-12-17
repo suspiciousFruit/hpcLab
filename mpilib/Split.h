@@ -46,6 +46,7 @@ std::vector<ViewTask> splitToTasks(
 
 	for (size_t i = 0; i < ranges.size(); ++i) {
 		const auto [cr, tr] = ranges[i];
+		std::cout << cr << '-' << tr << '\n';
 		tasks.emplace_back(makeViewArray(cs, cr), makeViewArray(ts, tr));
 	}
 

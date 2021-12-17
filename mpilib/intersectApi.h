@@ -2,11 +2,12 @@
 #include "../lib/intersect.h"
 #include "../lib/PointsArray.h"
 
-const size_t num_threads = 1;
+const size_t num_threads = 2;
 
 template <typename ArrC, typename ArrT>
-PointsArray&& intersect_omp(const ArrC& cs, const ArrT& ts) {
-    MutexPointsArray points; // Синхронное множество (множество с мьютексом)
+std::vector<point_t> intersect_omp(const ArrC& cs, const ArrT& ts) {
+    std::vector<point_t> pvec;
+    MutexPointsArrayWrap points(pvec); // Синхронное множество (множество с мьютексом)
     const size_t nts = ts.size();
     const size_t ncs = cs.size();
 
@@ -22,5 +23,5 @@ PointsArray&& intersect_omp(const ArrC& cs, const ArrT& ts) {
         points.push(localPoints);
     }
 
-    return points.getPointsArray();
+    return std::move(pvec);
 }

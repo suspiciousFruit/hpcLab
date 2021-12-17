@@ -1,3 +1,5 @@
+#pragma once
+#include <mpi.h>
 #include "Task.h"
 #include "utils.h"
 
@@ -10,7 +12,10 @@ void sendTask(const TaskT& task, int pid, MPI_Comm comm) {
     const auto [cs, csize] = task.getRawCircles();
     const auto [ts, tsize] = task.getRawTriangles();
     std::cout << cs << ' ' << ts << std::endl;
+    MPI_Send("1234", 4, MPI_CHAR, pid, 0, comm);
+    std::cout << "phase2\n";
     MPI_Send((char*)cs, csize * sizeof(circle_t), MPI_CHAR, pid, 0, comm);
+    std::cout << "phase2\n";
     MPI_Send((char*)ts, tsize * sizeof(triangle_t), MPI_CHAR, pid, 0, comm);
 }
 
@@ -19,6 +24,20 @@ void sendCompleteTask(const CompleteTask& ctask, int pid, MPI_Comm comm) {
     const size_t size = ctask.size() * sizeof(point_t);
 
     MPI_Send((char*)data, size, MPI_CHAR, pid, 0, comm);
+}
+
+namespace async {
+    template <typename TaskT>
+    void sendTask(const TaskT& task, int pid, MPI_Comm comm) {
+        MPI_Request req;
+        MPI_Status status;
+        const auto [cs, csize] = task.getRawCircles();
+        const auto [ts, tsize] = task.getRawTriangles();
+
+        MPI_Isend((char*)cs, csize * sizeof(circle_t), MPI_CHAR, pid, 0, comm, &req);
+        MPI_Isend((char*)ts, tsize * sizeof(triangle_t), MPI_CHAR, pid, 0, comm, &req);
+        MPI_Wait(&req, &status);
+    }
 }
 
 //-------------------------------------------------------------------------------------------------

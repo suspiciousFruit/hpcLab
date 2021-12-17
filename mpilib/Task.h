@@ -10,6 +10,7 @@ private:
     PointsArray points_;
 public:
     CompleteTask(PointsArray&& parr) : points_(std::move(parr)) { }
+    CompleteTask(std::vector<point_t>&& points) : points_(std::move(points)) {}
     CompleteTask() : points_(0) { }
     const point_t* data() const { return points_.data(); }
     size_t size() const { return points_.size(); }
@@ -28,6 +29,7 @@ public:
 template <typename ArrC, typename ArrT>
 class Task {
 private:
+public:
 	ArrC circles_;
 	ArrT triangles_;
 public:
@@ -43,8 +45,7 @@ public:
     }
 
     CompleteTask complete() const {
-        PointsArray&& res = intersect_omp(circles_, triangles_);
-        std::cout << res.size() << '@';
+        auto res = intersect_omp(circles_, triangles_);
         return CompleteTask(std::move(res));
     }
 

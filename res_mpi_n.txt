@@ -1,0 +1,20 @@
+threads: 1
+processes: 1 |time(sec): 0.297455
+processes: 2 |time(sec): 0.125843
+processes: 3 |time(sec): 0.07515
+processes: 4 |time(sec): 0.065775
+threads: 2
+processes: 1 |time(sec): 0.313955
+processes: 2 |time(sec): 0.125158
+processes: 3 |time(sec): 0.0748642
+processes: 4 |time(sec): 0.0662961
+threads: 4
+processes: 1 |time(sec): 0.30055
+processes: 2 |time(sec): 0.125968
+processes: 3 |time(sec): 0.0745543
+processes: 4 |time(sec): 0.0656757
+0.0224027
+processes: 1 |time(sec): 0.0553114
+processes: 2 |time(sec): 0.0219734
+processes: 3 |time(sec): 0.0157509
+processes: 4 |time(sec): 0.0212882

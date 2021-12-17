@@ -1,0 +1,12 @@
+threads: 1
+processes: 1 |time(sec): 0.304196
+processes: 2 |time(sec): 0.139597
+processes: 3 |time(sec): 0.121387
+threads: 2
+processes: 1 |time(sec): 0.302359
+processes: 2 |time(sec): 0.138758
+processes: 3 |time(sec): 0.124042
+threads: 3
+processes: 1 |time(sec): 0.30158
+processes: 2 |time(sec): 0.139484
+processes: 3 |time(sec): 0.124546
